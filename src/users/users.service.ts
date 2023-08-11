@@ -9,13 +9,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpResponse } from 'src/utils/response';
-import { Status, User } from '@prisma/client';
+import { Status } from '@prisma/client';
 import { comparePwd, generateToken, hashPwd } from 'src/utils/helpers';
-import { CreateProfileDto } from './dto/create-profile.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { SchedulerRegistry } from '@nestjs/schedule';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { AuthToken } from 'src/@interfaces/auth-token';
 
@@ -25,7 +22,6 @@ export class UsersService {
     private readonly db: PrismaService,
     private cloudinary: CloudinaryService,
     private readonly eventEmitter: EventEmitter2,
-    private readonly scheduleRegistry: SchedulerRegistry,
   ) {}
   async create(createUserDto: CreateUserDto) {
     try {
@@ -46,78 +42,11 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    const users = await this.db.profile.findMany();
-    return new HttpResponse('Users retrieved successfully', users);
-  }
-
-  async createProfile(id: string, createProfileDto: CreateProfileDto) {
-    let profilePic: string | undefined;
-    try {
-      if (createProfileDto.image) {
-        profilePic = await this.cloudinary.uploadImage(createProfileDto.image);
-      }
-      const profile = await this.db.$transaction(async (prisma) => {
-        const [user, profile] = await Promise.all([
-          prisma.user.findUnique({ where: { id } }),
-          prisma.profile.create({
-            data: {
-              username: createProfileDto.username,
-              bio: createProfileDto.bio,
-              profilePic,
-              userId: id,
-            },
-          }),
-        ]);
-        if (!user) {
-          throw new NotFoundException('User not found!');
-        }
-        return profile;
-      });
-      return new HttpResponse('Profile created successfully!', profile);
-    } catch (error) {
-      if (profilePic) {
-        this.eventEmitter.emit('delete.image', profilePic);
-      }
-      if (error.meta?.target === 'Profile_userId_key') {
-        error.message = 'Profile already exists';
-        error.status = 409;
-      }
-      throw new HttpException(error.message, error.status || 500);
-    }
-  }
-  async updateProfile(id: string, updateProfileDto: UpdateProfileDto) {
-    let profilePic: string | undefined;
-    try {
-      if (updateProfileDto.image) {
-        profilePic = await this.cloudinary.uploadImage(updateProfileDto.image);
-      }
-      const updatedUser = await this.db.profile.update({
-        where: { userId: id },
-        data: { profilePic, ...updateProfileDto },
-      });
-
-      return new HttpResponse('Profile updated succesfully', updatedUser);
-    } catch (error) {
-      if (profilePic) {
-        this.eventEmitter.emit('delete.image', profilePic);
-      }
-      if (error.meta?.message) {
-        error.message = error.meta.message;
-      }
-      if (error.meta?.cause) {
-        error.status = 404;
-        error.message = error.meta.cause;
-      }
-      throw new HttpException(error.message, error.status || 500);
-    }
-  }
-
   async login({ email, password }: LoginDto) {
     try {
       const user = await this.db.user.findFirst({
         where: { email },
-        include: { profile: true, _count: true },
+        include: { profile: true },
       });
       if (!user) {
         throw new NotFoundException('Account with this email does not exist.');
@@ -142,15 +71,23 @@ export class UsersService {
       throw new HttpException(error.message, error.status || 500);
     }
   }
+
+  async findAll() {
+    const users = await this.db.user.findMany();
+    return new HttpResponse('Users retrieved successfully', users);
+  }
+
   async findOne(id: string) {
     try {
       const user = await this.db.user.findFirst({
         where: { id },
         include: {
-          _count: true,
           profile: true,
         },
       });
+      if (!user) {
+        throw new NotFoundException('User not found!');
+      }
       return new HttpResponse('User info retrieved successfully', {
         ...user,
         password: undefined,
@@ -195,13 +132,13 @@ export class UsersService {
       const deletedUser = await this.db.$transaction(async (prisma) => {
         const user = await prisma.user.delete({
           where: { id },
-          include: { profile: true, _count: true },
+          include: { profile: true },
         });
-        if (user._count.awards) {
-          throw new BadRequestException(
-            'Awarded user should not be deleted forever.',
-          );
-        }
+        // if (user.profile.) {
+        //   throw new BadRequestException(
+        //     'Awarded user should not be deleted forever.',
+        //   );
+        // }
         return user;
       });
       if (deletedUser?.profile?.profilePic) {

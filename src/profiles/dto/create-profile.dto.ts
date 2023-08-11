@@ -13,7 +13,10 @@ export class CreateProfileDto {
   @Length(5, 20)
   username: string;
 
-  @ApiProperty({ default: 'https://image.png' })
+  @ApiProperty({
+    default:
+      'https://cdn.pixabay.com/photo/2023/08/06/17/13/roads-8173354_1280.jpg',
+  })
   @IsString()
   image: string;
 

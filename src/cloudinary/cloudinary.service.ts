@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class CloudinaryService {
-  private readonly FOLDER = 'FlipSide-Hosting-Images';
+  private readonly FOLDER = 'MCSA-Student-Awards';
 
   async uploadImage(image: string) {
     try {

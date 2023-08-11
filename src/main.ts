@@ -40,6 +40,7 @@ async function bootstrap() {
   //Starting server
   await app.listen(PORT, () => {
     console.log(`Server running on port ${PORT} 🔥`);
+    console.log(`Docs: http://localhost:${PORT}/api/v1/docs ⌁`);
   });
 }
 bootstrap();

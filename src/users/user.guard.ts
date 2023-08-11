@@ -27,7 +27,7 @@ export const AuthGuard = (role?: Role) => {
         if (!user.id) {
           throw new BadRequestException('Something went wrong try again later');
         }
-        if (role && user.role !== role) {
+        if (role && user.role !== role && user.role !== Role.SUPER_ADMIN) {
           throw new ForbiddenException(
             `Access denied, you must be ${role} to perform this action`,
           );

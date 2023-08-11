@@ -8,55 +8,56 @@ datasource db {
 }
 
 model User {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  email       String      @unique
+  password    String?
+  firstName   String
+  lastName    String?
+  accountType AccountType @default(EMAIL)
+  role        Role        @default(USER)
+  status      Status      @default(ACTIVE)
+  verified    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  profile     Profile?
+}
+
+model Profile {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  email        String        @unique
-  password     String?
-  firstName    String
-  lastName     String?
-  accountType  AccountType   @default(EMAIL)
-  role         Role          @default(USER)
-  status       Status        @default(ACTIVE)
-  verified     Boolean       @default(false)
+  username     String?
+  phoneNumber  String?
+  profilePic   String?
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String        @unique @db.ObjectId
+  bio          String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  profile      Profile?
   performances Performance[]
   awards       Award[]
   activities   Activity[]
 }
 
-model Profile {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  username    String?
-  phoneNumber String?
-  profilePic  String?
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String   @unique @db.ObjectId
-  bio         String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
 model Season {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  name         SeasonName
+  name         SeasonName    @unique
   date         DateTime
   performances Performance[]
   awards       Award[]
 }
 
 model Performance {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
-  seasonId      String   @unique @db.ObjectId
-  featuredPhoto String
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  season        Season     @relation(fields: [seasonName], references: [name], onDelete: Cascade)
+  seasonName    SeasonName
   images        String[]
   videoUrl      String
   duration      String
   title         String
   description   String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String   @unique @db.ObjectId
+  userProfile   Profile    @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId String     @db.ObjectId
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
 model Award {
@@ -64,23 +65,38 @@ model Award {
   title         String
   caption       String
   category      AwardCategory
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String        @unique @db.ObjectId
-  season        Season        @relation(fields: [seasonId], references: [id], onDelete: Cascade)
-  seasonId      String        @unique @db.ObjectId
+  userProfile   Profile       @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId String        @db.ObjectId
+  season        Season        @relation(fields: [seasonName], references: [name], onDelete: Cascade)
+  seasonName    SeasonName
   featuredPhoto String
-  performanceId String?
+  certificate   Certificate?  @relation(fields: [certificateId], references: [id])
+  certificateId String?       @unique @db.ObjectId
+  activity      Activity?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Certificate {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  downloads        Int       @default(5)
+  lastDownloadedAt DateTime?
+  award            Award?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Activity {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  caption   String
-  images    String[]
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @unique @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  caption       String
+  images        String[]
+  userProfile   Profile  @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId String   @db.ObjectId
+  award         Award?   @relation(fields: [awardId], references: [id])
+  awardId       String?  @unique @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum Role {

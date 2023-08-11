@@ -6,7 +6,9 @@ import * as Joi from 'joi';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ScheduleModule } from '@nestjs/schedule';
+import { SeasonsModule } from './seasons/seasons.module';
+import { PerformancesModule } from './performances/performances.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
@@ -19,8 +21,10 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     CloudinaryModule,
     UsersModule,
+    ProfilesModule,
     EventEmitterModule.forRoot(),
-    ScheduleModule.forRoot(),
+    SeasonsModule,
+    PerformancesModule,
   ],
   controllers: [AppController],
   providers: [CloudinaryService],
