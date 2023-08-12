@@ -19,10 +19,6 @@ import {
 
 const DELETE_IMAGES_EVENT_NAME = 'delete.images.multiple';
 
-interface EventPayload<T> {
-  data: T;
-}
-
 @Injectable()
 export class PerformancesService {
   constructor(
@@ -94,7 +90,10 @@ export class PerformancesService {
       if (!performance) {
         throw new NotFoundException('Performance not found in our system');
       }
-      return new HttpResponse('Season retrieved successfully', performance);
+      return new HttpResponse(
+        'Performance retrieved successfully',
+        performance,
+      );
     } catch (error) {
       if (error.meta?.message) {
         error.message = error.meta.message;
@@ -117,7 +116,7 @@ export class PerformancesService {
         data: { ...updatePerformanceDto },
       });
       return new HttpResponse(
-        'Season updated successfully',
+        'Performance updated successfully',
         updatedPerformance,
       );
     } catch (error) {
@@ -236,7 +235,7 @@ export class PerformancesService {
           data: performance.images,
         });
       }
-      return new HttpResponse('Season deleted successfully', performance);
+      return new HttpResponse('Performance deleted successfully', performance);
     } catch (error) {
       if (error.meta?.cause) {
         error.status = 404;

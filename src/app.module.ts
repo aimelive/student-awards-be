@@ -9,6 +9,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SeasonsModule } from './seasons/seasons.module';
 import { PerformancesModule } from './performances/performances.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { AwardsModule } from './awards/awards.module';
+import { ActivitiesModule } from './activities/activities.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { ProfilesModule } from './profiles/profiles.module';
     EventEmitterModule.forRoot(),
     SeasonsModule,
     PerformancesModule,
+    AwardsModule,
+    ActivitiesModule,
   ],
   controllers: [AppController],
   providers: [CloudinaryService],
