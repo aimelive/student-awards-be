@@ -5,6 +5,7 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profile } from '@prisma/client';
 
 @Injectable()
 export class ProfilesService {
@@ -27,6 +28,7 @@ export class ProfilesService {
             data: {
               username: createProfileDto.username,
               bio: createProfileDto.bio,
+              phoneNumber: createProfileDto.phoneNumber,
               profilePic,
               userId: id,
             },
@@ -61,6 +63,7 @@ export class ProfilesService {
       if (updateProfileDto.image) {
         profilePic = await this.cloudinary.uploadImage(updateProfileDto.image);
       }
+      updateProfileDto.image = undefined;
       const updatedUser = await this.db.profile.update({
         where: { userId: id },
         data: { profilePic, ...updateProfileDto },
@@ -108,6 +111,24 @@ export class ProfilesService {
         ...profile,
         user: { ...profile.user, password: undefined },
       });
+    } catch (error) {
+      if (error.meta?.message) {
+        error.message = error.meta.message;
+      }
+      throw new HttpException(error.message, error.status || 500);
+    }
+  }
+
+  async remove(id: string) {
+    try {
+      const profile = await this.db.profile.delete({ where: { id } });
+      if (profile.profilePic) {
+        this.eventEmitter.emit('delete.profile-image', profile.profilePic);
+      }
+      return new HttpResponse<Profile>(
+        'Profile deleted successfully!',
+        profile,
+      );
     } catch (error) {
       if (error.meta?.message) {
         error.message = error.meta.message;

@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class CloudinaryService {
-  private readonly FOLDER = 'MCSA-Student-Awards';
+  private readonly FOLDER = 'MCSA-Student-Awards-Testing';
 
   async uploadImage(image: string) {
     try {
@@ -38,7 +38,7 @@ export class CloudinaryService {
         resource_type: 'image',
       });
       if (response.result === 'ok') {
-        console.log('Image deleted on cloudinary');
+        // console.log('Image deleted on cloudinary');
         return true;
       } else if (response.result === 'not found') {
         console.log('CLOUDINARY: Image not found');

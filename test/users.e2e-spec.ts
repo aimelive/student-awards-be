@@ -128,6 +128,8 @@ describe('UsersController', () => {
       });
       expect(response.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
+      expect(response.body.data.id).toBeDefined();
+      expect(response.body.data.id).toEqual(createdUserId);
       expect(response.body.token).toBeDefined();
       updatedUserLoginToken = response.body.token;
     });

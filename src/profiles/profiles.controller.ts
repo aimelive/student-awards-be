@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
@@ -77,5 +78,18 @@ export class ProfilesController {
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
     return this.profilesService.update(id, updateProfileDto);
+  }
+
+  @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(Role.SUPER_ADMIN))
+  @ApiOperation({
+    summary: 'Delete profile',
+    description: 'Delete a profile of a user',
+  })
+  remove(
+    @Param('id', ObjectIdValidationPipe) id: string
+  ) {
+    return this.profilesService.remove(id);
   }
 }
