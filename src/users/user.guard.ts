@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  HttpException,
   mixin,
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
@@ -34,9 +35,10 @@ export const AuthGuard = (role?: Role) => {
         }
         return true;
       } catch (error) {
-        throw new BadRequestException(
+        throw new HttpException(
           error.message ||
             'Invalid or expired auth token detected, login again',
+          error.status || 400,
         );
       }
     }

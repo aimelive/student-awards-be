@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -33,7 +34,8 @@ export class UsersController {
   }
 
   @Post('login')
-  @ApiOperation({
+  @HttpCode(200)
+  @ApiOperation({ 
     summary: 'Login',
     description: 'Sign in to your account. Verified user only.',
   })

@@ -4,8 +4,8 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
-import { AuthToken } from '../@interfaces/auth-token';
 import { verifyToken } from '../utils/helpers';
+import { AuthToken } from '../@interfaces/auth-token';
 
 export const AuthUser = createParamDecorator<AuthToken>(
   (data: unknown, ctx: ExecutionContext) => {
