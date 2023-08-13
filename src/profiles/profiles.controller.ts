@@ -11,9 +11,9 @@ import { ProfilesService } from './profiles.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/users/user.guard';
+import { AuthGuard } from '../users/user.guard';
 import { Role } from '@prisma/client';
-import { ObjectIdValidationPipe } from 'src/utils/helpers';
+import { ObjectIdValidationPipe } from '../utils/helpers';
 
 @Controller({ path: 'profile', version: '1' })
 @ApiTags('Profiles')

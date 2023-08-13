@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { Observable } from 'rxjs';
-import { AuthToken } from 'src/@interfaces/auth-token';
-import { verifyToken } from 'src/utils/helpers';
+import { AuthToken } from '../@interfaces/auth-token';
+import { verifyToken } from '../utils/helpers';
 
 export const AuthGuard = (role?: Role) => {
   class AuthGuardMixin implements CanActivate {

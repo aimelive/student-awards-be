@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString } from 'class-validator';
-import { IsCloudinaryUrl } from 'src/utils/helpers';
+import { IsCloudinaryUrl } from '../../utils/helpers';
 
 export class AddActivityImageDto {
   @ApiProperty({

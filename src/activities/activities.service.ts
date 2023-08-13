@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { HttpResponse } from 'src/utils/response';
+import { HttpResponse } from '../utils/response';
 import { Activity } from '@prisma/client';
 import {
   AddActivityImageDto,

@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SeasonName } from '@prisma/client';
-import {
-  IsEnum,
-  IsOptional,
-  IsString,
-  Length,
-} from 'class-validator';
-import { IsCustomDurationFormat, IsYouTubeUrl } from 'src/utils/helpers';
+import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { IsCustomDurationFormat, IsYouTubeUrl } from '../../utils/helpers';
 
 export class UpdatePerformanceDto {
   @ApiProperty({

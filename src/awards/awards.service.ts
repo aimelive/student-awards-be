@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { CreateAwardDto } from './dto/create-award.dto';
 import { UpdateAwardDto } from './dto/update-award.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { HttpResponse } from 'src/utils/response';
+import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { HttpResponse } from '../utils/response';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { isString } from 'class-validator';
 import { Award } from '@prisma/client';

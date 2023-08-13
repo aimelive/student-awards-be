@@ -8,13 +8,13 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/users/user.guard';
+import { AuthGuard } from '../users/user.guard';
 import { PerformancesService } from './performances.service';
 import { CreatePerformanceDto } from './dto/create-performance.dto';
 import { UpdatePerformanceDto } from './dto/update-performance.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { ObjectIdValidationPipe } from 'src/utils/helpers';
+import { ObjectIdValidationPipe } from '../utils/helpers';
 import {
   AddPerformanceImageDto,
   RemovePerformanceImageDto,

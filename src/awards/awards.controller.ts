@@ -12,9 +12,9 @@ import { AwardsService } from './awards.service';
 import { CreateAwardDto } from './dto/create-award.dto';
 import { UpdateAwardDto } from './dto/update-award.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/users/user.guard';
+import { AuthGuard } from '../users/user.guard';
 import { Role } from '@prisma/client';
-import { ObjectIdValidationPipe } from 'src/utils/helpers';
+import { ObjectIdValidationPipe } from '../utils/helpers';
 
 @Controller({ path: 'awards', version: '1' })
 @ApiTags('Winners')

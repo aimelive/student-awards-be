@@ -8,9 +8,9 @@ import {
 import { CreatePerformanceDto } from './dto/create-performance.dto';
 import { UpdatePerformanceDto } from './dto/update-performance.dto';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpResponse } from 'src/utils/response';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { HttpResponse } from '../utils/response';
 import { Performance } from '@prisma/client';
 import {
   AddPerformanceImageDto,

@@ -10,7 +10,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { IsCustomDurationFormat, IsYouTubeUrl } from 'src/utils/helpers';
+import { IsCustomDurationFormat, IsYouTubeUrl } from '../../utils/helpers';
 
 export class CreatePerformanceDto {
   @ApiProperty({

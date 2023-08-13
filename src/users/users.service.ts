@@ -7,14 +7,14 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpResponse } from 'src/utils/response';
+import { HttpResponse } from '../utils/response';
 import { Status } from '@prisma/client';
-import { comparePwd, generateToken, hashPwd } from 'src/utils/helpers';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { comparePwd, generateToken, hashPwd } from '../utils/helpers';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { LoginDto } from './dto/login-user.dto';
-import { AuthToken } from 'src/@interfaces/auth-token';
+import { AuthToken } from '../@interfaces/auth-token';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {

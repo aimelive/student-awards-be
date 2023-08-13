@@ -12,9 +12,9 @@ import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/users/user.guard';
+import { AuthGuard } from '../users/user.guard';
 import { Role } from '@prisma/client';
-import { ObjectIdValidationPipe } from 'src/utils/helpers';
+import { ObjectIdValidationPipe } from '../utils/helpers';
 import {
   AddActivityImageDto,
   RemoveActivityImageDto,

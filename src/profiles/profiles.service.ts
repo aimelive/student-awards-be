@@ -1,8 +1,8 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpResponse } from 'src/utils/response';
+import { PrismaService } from '../prisma/prisma.service';
+import { HttpResponse } from '../utils/response';
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 

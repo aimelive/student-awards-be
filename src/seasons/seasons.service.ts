@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { CreateSeasonDto } from './dto/create-season.dto';
 import { UpdateSeasonDto } from './dto/update-season.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { HttpResponse } from 'src/utils/response';
+import { PrismaService } from '../prisma/prisma.service';
+import { HttpResponse } from '../utils/response';
 import { SeasonName } from '@prisma/client';
 
 @Injectable()

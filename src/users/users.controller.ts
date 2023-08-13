@@ -15,7 +15,7 @@ import { AuthGuard } from './user.guard';
 import { Role } from '@prisma/client';
 import { LoginDto } from './dto/login-user.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-import { ObjectIdValidationPipe } from 'src/utils/helpers';
+import { ObjectIdValidationPipe } from '../utils/helpers';
 
 @Controller({ path: 'users', version: '1' })
 @ApiTags('Users')

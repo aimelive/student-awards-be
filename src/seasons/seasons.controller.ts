@@ -13,7 +13,7 @@ import { SeasonsService } from './seasons.service';
 import { CreateSeasonDto } from './dto/create-season.dto';
 import { UpdateSeasonDto } from './dto/update-season.dto';
 import { Role, SeasonName } from '@prisma/client';
-import { AuthGuard } from 'src/users/user.guard';
+import { AuthGuard } from '../users/user.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller({ path: 'seasons', version: '1' })
