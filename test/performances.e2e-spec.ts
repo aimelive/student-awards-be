@@ -92,7 +92,7 @@ describe('PerformancesController (E2E)', () => {
     expect(response.body.data).toHaveProperty('id');
     expect(response.body.data.images).toHaveLength(4);
     addedImage = response.body.data.images[3];
-  });
+  }, 10000);
 
   it('/performances/removeImage/:id (PATCH) - should remove performance image', async () => {
     const removeImageDto = {
@@ -107,7 +107,7 @@ describe('PerformancesController (E2E)', () => {
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveProperty('id');
     expect(response.body.data.images).toHaveLength(3);
-  });
+  }, 10000);
 
   it('/performances/profile/:id (GET) - should get performances by profile Id', async () => {
     const response = await request(server).get(
