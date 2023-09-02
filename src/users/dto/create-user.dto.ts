@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role, Status } from '@prisma/client';
 import {
   IsAlpha,
   IsDefined,
   IsEmail,
+  IsEnum,
   IsOptional,
   IsStrongPassword,
   Length,
@@ -28,7 +30,17 @@ export class CreateUserDto {
 
   @ApiProperty({ default: 'Umuhungu@123' })
   @Length(5, 15)
-  @IsDefined()
+  @IsOptional()
   @IsStrongPassword(undefined, { message: 'please enter a strong password' })
-  password: string;
+  password?: string;
+
+  @ApiProperty({ default: Role.USER })
+  @IsOptional()
+  @IsEnum(Role)
+  role?: Role;
+
+  @ApiProperty({ default: Status.IDLE })
+  @IsOptional()
+  @IsEnum(Status)
+  status?: Status;
 }

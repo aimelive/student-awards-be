@@ -52,7 +52,8 @@ export class AwardsService {
         });
       }
       if (error.meta?.cause) {
-        error.message = error.meta.cause;
+        error.message =
+          "Sorry, season or user profile Id you're trying to add does not exist in our system. please try again or contact an admin for help.";
       }
       if (error.meta?.message) {
         error.message = error.meta.message;

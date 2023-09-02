@@ -1,11 +1,16 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpResponse } from '../utils/response';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { Profile } from '@prisma/client';
+import { Profile, Role } from '@prisma/client';
 
 @Injectable()
 export class ProfilesService {
@@ -36,6 +41,11 @@ export class ProfilesService {
         ]);
         if (!user) {
           throw new NotFoundException('User not found!');
+        }
+        if (user.role === Role.SUPER_ADMIN) {
+          throw new BadRequestException(
+            "Super Admin profile can not be created, this action is only possible when it's done manually in the database.",
+          );
         }
         return profile;
       });
@@ -76,6 +86,10 @@ export class ProfilesService {
       }
       if (error.meta?.message) {
         error.message = error.meta.message;
+      }
+      if (error?.meta?.target === 'Profile_username_key') {
+        error.status = 409;
+        error.message = `Username <b>${updateProfileDto.username}</b> is already used. Please try a different one.`;
       }
       if (error.meta?.cause) {
         error.status = 404;

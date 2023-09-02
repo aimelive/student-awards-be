@@ -12,7 +12,7 @@ export class AppController {
   getHello() {
     return {
       message: 'Welcome to Student Awards Backend',
-      documentation: 'http://localhost:3000/api/v1/docs',
+      documentation: 'https://mcsa.up.railway.app/api/v1/docs',
       frontend: 'https://mcsa.com',
     };
   }

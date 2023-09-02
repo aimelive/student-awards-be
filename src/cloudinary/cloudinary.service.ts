@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class CloudinaryService {
-  private readonly FOLDER = 'MCSA-Student-Awards-Testing';
+  private readonly FOLDER = 'MCSA-Student-Awards-Testing2';
 
   async uploadImage(image: string) {
     try {
@@ -25,7 +25,9 @@ export class CloudinaryService {
         message = 'Unauthorized action, unable to upload image';
       }
       throw new BadRequestException(
-        message || error.message || 'Unknown error while uploading image',
+        message ||
+          error.message ||
+          'Unknown error while uploading image, please try again.',
       );
     }
   }

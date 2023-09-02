@@ -8,6 +8,6 @@ export class LoginDto {
 
   @ApiProperty({ default: 'Umuhungu@123' })
   @Length(5, 15)
-  @IsStrongPassword(undefined, { message: 'please enter a strong password' })
+  @IsStrongPassword()
   password: string;
 }

@@ -20,7 +20,9 @@ export const AuthGuard = (role?: Role) => {
       const token: string | undefined = request.headers['authorization'];
 
       if (!token) {
-        throw new ForbiddenException('User not logged in');
+        throw new ForbiddenException(
+          'Authentication token is missing, please login to continue.',
+        );
       }
 
       try {
@@ -35,9 +37,15 @@ export const AuthGuard = (role?: Role) => {
         }
         return true;
       } catch (error) {
+        if (error.message == 'jwt expired') {
+          error.message = 'Session has expired';
+        }
+        const message = error.message || 'Invalid auth token';
         throw new HttpException(
-          error.message ||
-            'Invalid or expired auth token detected, login again',
+          {
+            message: message + ', please login again to continue.',
+            error: 'Authentication Failed',
+          },
           error.status || 400,
         );
       }

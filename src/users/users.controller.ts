@@ -17,6 +17,8 @@ import { Role } from '@prisma/client';
 import { LoginDto } from './dto/login-user.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { ObjectIdValidationPipe } from '../utils/helpers';
+import { AuthUser } from './users.decorator';
+import { AuthToken } from '../@interfaces/auth-token';
 
 @Controller({ path: 'users', version: '1' })
 @ApiTags('Users')
@@ -35,7 +37,7 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(200)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Login',
     description: 'Sign in to your account. Verified user only.',
   })
@@ -50,8 +52,8 @@ export class UsersController {
     description: 'Get all user accounts in our system',
   })
   @UseGuards(AuthGuard(Role.ADMIN))
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@AuthUser() authToken: AuthToken) {
+    return this.usersService.findAll(authToken);
   }
 
   @Get(':id')
@@ -71,11 +73,12 @@ export class UsersController {
     summary: 'Update user account',
     description: 'Update user account informations',
   })
-  @UseGuards(AuthGuard(Role.SUPER_ADMIN))
+  @UseGuards(AuthGuard(Role.ADMIN))
   update(
     @Param('id', ObjectIdValidationPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    //Notify the super admin about the updated data
     return this.usersService.update(id, updateUserDto);
   }
 
@@ -85,8 +88,9 @@ export class UsersController {
     summary: 'Delete user forever',
     description: 'Delete user account and related data from our system forever',
   })
-  @UseGuards(AuthGuard(Role.SUPER_ADMIN))
+  @UseGuards(AuthGuard(Role.ADMIN))
   remove(@Param('id', ObjectIdValidationPipe) id: string) {
+    //Notify super admin that the user has deleted successfully
     return this.usersService.remove(id);
   }
 }

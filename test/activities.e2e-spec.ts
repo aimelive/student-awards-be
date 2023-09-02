@@ -98,7 +98,7 @@ describe('ActivitiesController (E2E)', () => {
     expect(response.body.data).toHaveProperty('id');
     expect(response.body.data.images).toHaveLength(4);
     addedImage = response.body.data.images[3];
-  });
+  }, 10000);
 
   it('/activities/removeImage/:id (PATCH) - should remove activity image', async () => {
     const removeImageDto = {
@@ -113,7 +113,7 @@ describe('ActivitiesController (E2E)', () => {
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveProperty('id');
     expect(response.body.data.images).toHaveLength(3);
-  });
+  }, 10000);
 
   it('/activities/:id (PATCH) - should update a specific activity', async () => {
     const updateActivityDto = {

@@ -9,7 +9,6 @@ import { adminCredentials } from './stubs/users';
 describe('ProfileController', () => {
   let app: INestApplication;
   let server: any;
-  let user: User;
   let token: string;
 
   beforeAll(async () => {
@@ -47,12 +46,13 @@ describe('ProfileController', () => {
       expect(data.email).toBeDefined();
       expect(data.email).toBe(adminCredentials().email);
       token = userToken;
-      user = data;
-    });
+    }, 10000);
   });
 
   describe('GET Profiles', () => {
     let createdProfileId: string;
+    let createdUserId: string;
+
     it('should get profiles when authenticated', async () => {
       const response = await request(server)
         .get('/profile')
@@ -61,19 +61,34 @@ describe('ProfileController', () => {
       expect(response.body.data).toEqual(expect.any(Array));
     });
 
-    it('should get profile by Id', async () => {
+    it('should create a new user and return status code 201', async () => {
       const response = await request(server)
-        .get('/profile/user/' + user.id)
+        .post('/users')
+        .set('authorization', `Bearer ${token}`)
+        .send({
+          firstName: 'Aime',
+          lastName: 'Ndayambaje',
+          email: 'aimelive2030@gmail.com',
+        });
+
+      expect(response.statusCode).toBe(201);
+      expect(response.body.data.id).toBeDefined();
+      createdUserId = response.body.data.id;
+    });
+
+    it('should not get profile by Id', async () => {
+      const response = await request(server)
+        .get('/profile/user/' + createdUserId)
         .set('authorization', `Bearer ${token}`);
       expect(response.statusCode).toBe(404);
     });
 
     it('should create the user profile', async () => {
       const response = await request(server)
-        .post('/profile/' + user.id)
+        .post('/profile/' + createdUserId)
         .set('authorization', `Bearer ${token}`)
         .send({
-          username: 'aimelive250',
+          username: 'aimelive2030',
           image:
             'https://www.peregrine-bryant.co.uk/img/uploadsfiles/2018/05/placeholder-test.png',
           phoneNumber: '0786385773',
@@ -81,34 +96,36 @@ describe('ProfileController', () => {
         });
       expect(response.statusCode).toBe(201);
       expect(response.body.data.id).toBeDefined();
-      expect(response.body.data.userId).toBe(user.id);
+      expect(response.body.data.userId).toBe(createdUserId);
       expect(response.body.data.phoneNumber).toEqual('0786385773');
       createdProfileId = response.body.data.id;
-    });
+    }, 10000);
 
     it('should update the created user profile', async () => {
       const response = await request(server)
-        .patch(`/profile/${user.id}`)
+        .patch(`/profile/${createdUserId}`)
         .set('authorization', `Bearer ${token}`)
         .send({
-          username: 'aimelive',
+          username: 'aimeliveMubi',
           image:
             'https://www.peregrine-bryant.co.uk/img/uploadsfiles/2018/05/placeholder-test.png',
           phoneNumber: '0786385775',
         });
       expect(response.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
-      expect(response.body.data.userId).toEqual(user.id);
-      expect(response.body.data.username).toEqual('aimelive');
+      expect(response.body.data.userId).toEqual(createdUserId);
+      expect(response.body.data.username).toEqual('aimeliveMubi');
       expect(response.body.data.phoneNumber).toEqual('0786385775');
       expect(response.body.data.profilePic).toBeDefined();
     });
 
     it('should get profile by Id', async () => {
-      const response = await request(server).get('/profile/user/' + user.id);
+      const response = await request(server).get(
+        '/profile/user/' + createdUserId,
+      );
       expect(response.statusCode).toBe(200);
-      expect(response.body.data.userId).toEqual(user.id);
-      expect(response.body.data.username).toEqual('aimelive');
+      expect(response.body.data.userId).toEqual(createdUserId);
+      expect(response.body.data.username).toEqual('aimeliveMubi');
       expect(response.body.data.phoneNumber).toEqual('0786385775');
     });
 
@@ -121,8 +138,20 @@ describe('ProfileController', () => {
       expect(response.body.message).toBeDefined();
       expect(response.body.message).toEqual('Profile deleted successfully!');
       expect(response.body.data.phoneNumber).toEqual('0786385775');
-      expect(response.body.data.userId).toEqual(user.id);
+      expect(response.body.data.userId).toEqual(createdUserId);
       expect(response.body.data.id).toEqual(createdProfileId);
+    });
+
+    it('should delete created user', async () => {
+      const response = await request(server)
+        .delete(`/users/${createdUserId}`)
+        .set('authorization', `Bearer ${token}`);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.message).toBeDefined();
+      expect(response.body.message).toEqual('User deleted successfully!');
+      expect(response.body.data.email).toEqual('aimelive2030@gmail.com');
+      expect(response.body.data.id).toEqual(createdUserId);
     });
   });
 });

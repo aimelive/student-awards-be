@@ -1,1 +1,1 @@
-# Student Awards - Backend [![CI](https://github.com/aimelive/student-awards-be/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/aimelive/student-awards-be/actions/workflows/main.yml)
+# Student Awards - Backend [![Tests](https://github.com/aimelive/student-awards-be/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/aimelive/student-awards-be/actions/workflows/main.yml)

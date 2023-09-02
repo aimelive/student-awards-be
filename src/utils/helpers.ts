@@ -23,7 +23,7 @@ export const comparePwd = async (bodyPwd: string, dbPwd: string) => {
 //Generate token
 export const generateToken = <T>(
   data: T,
-  expiresIn: string = '5 days',
+  expiresIn: string = '2 hours',
 ): string => {
   const secret = process.env.JWT_TOKEN_SECRET || 'jwt-secret-mcsa';
   return jwt.sign({ data }, secret, {
@@ -115,7 +115,7 @@ export function IsCloudinaryUrl(validationOptions?: ValidationOptions) {
 export class ObjectIdValidationPipe implements PipeTransform<string, string> {
   transform(value: string): string {
     if (!isMongoId(value)) {
-      throw new BadRequestException(`${value} is not a valid MongoDB ObjectId`);
+      throw new BadRequestException(`<b>${value}</b> is not a valid ID`);
     }
     return value;
   }

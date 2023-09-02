@@ -18,8 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma": "npx prisma db push && npx prisma generate",
-    "studio": "npx prisma studio",
+    "prisma:generate": "npx prisma db push && npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "npx prisma db seed",
     "postinstall": "npx prisma generate"
   },
   "dependencies": {
@@ -88,5 +89,8 @@
     "moduleNameMapper": {
       "src/(.*)": "<rootDir>/src/$1"
     }
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

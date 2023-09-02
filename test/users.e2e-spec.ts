@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { LoginDto } from '../src/users/dto/login-user.dto';
 import { adminCredentials } from './stubs/users';
+import { Role } from '@prisma/client';
 
 describe('UsersController', () => {
   let app: INestApplication;
@@ -33,7 +34,7 @@ describe('UsersController', () => {
     it('should login the user and return a token', async () => {
       token = await loginUserAndGetToken(adminCredentials());
       expect(token).toBeDefined();
-    });
+    }, 10000);
   });
 
   describe('GET Users', () => {
@@ -89,7 +90,7 @@ describe('UsersController', () => {
       expect(response.statusCode).toBe(403);
       expect(response.body.data).toBeUndefined();
       expect(response.body.message).toBeDefined();
-      expect(response.body.message).toEqual('Account not verified');
+      expect(response.body.message).toContain('account is not verified');
     });
 
     it('should not login user not found', async () => {
@@ -101,8 +102,8 @@ describe('UsersController', () => {
       expect(response.statusCode).toBe(404);
       expect(response.body.data).toBeUndefined();
       expect(response.body.message).toBeDefined();
-      expect(response.body.message).toEqual(
-        'Account with this email does not exist.',
+      expect(response.body.message).toContain(
+        'Account with this email does not exist',
       );
     });
 
@@ -118,7 +119,22 @@ describe('UsersController', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(response.body.data.email).toEqual('newuser@gmail.com');
+      expect(response.body.data.verified).toBe(false);
+    });
+
+    it('should verify the current user and make an admin', async () => {
+      const response = await request(server)
+        .patch(`/users/${createdUserId}`)
+        .set('authorization', `Bearer ${token}`)
+        .send({
+          verified: true,
+          role: Role.ADMIN,
+        });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.email).toEqual('newuser@gmail.com');
       expect(response.body.data.verified).toBe(true);
+      expect(response.body.data.role).toBe(Role.ADMIN);
     });
 
     it('should be logged in successfully', async () => {
@@ -138,10 +154,27 @@ describe('UsersController', () => {
       const response = await request(server)
         .delete(`/users/${createdUserId}`)
         .set('authorization', `Bearer ${updatedUserLoginToken}`);
-      expect(response.statusCode).toBe(403);
+
+      expect(response.statusCode).toBe(400);
       expect(response.body.data).toBeUndefined();
       expect(response.body.message).toBeDefined();
-      expect(response.body.message).toContain('Access denied, you must be');
+      expect(response.body.message).toContain(
+        'Verified admin should not be deleted',
+      );
+    });
+
+    it('should unverify the user', async () => {
+      const response = await request(server)
+        .patch(`/users/${createdUserId}`)
+        .set('authorization', `Bearer ${token}`)
+        .send({
+          verified: false,
+        });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.email).toEqual('newuser@gmail.com');
+      expect(response.body.data.verified).toBe(false);
+      expect(response.body.data.role).toBe(Role.ADMIN);
     });
 
     it('should delete created user', async () => {

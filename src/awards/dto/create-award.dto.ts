@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AwardCategory, SeasonName } from '@prisma/client';
-import { IsEnum, IsMongoId, IsString, Length } from 'class-validator';
+import {
+  IsDefined,
+  IsEnum,
+  IsMongoId,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class CreateAwardDto {
   @ApiProperty({ default: 'Translators Dance Crew: Chasing the clout' })
@@ -23,7 +29,11 @@ export class CreateAwardDto {
   category: AwardCategory;
 
   @ApiProperty({ default: '64d30d481e904aae2bc3179f' })
-  @IsMongoId({ message: 'Invalid user profile Id' })
+  @IsMongoId({
+    message: (value) => {
+      return `Invalid user profile Id: <b>${value.value}</b>`;
+    },
+  })
   userProfileId: string;
 
   @ApiProperty({

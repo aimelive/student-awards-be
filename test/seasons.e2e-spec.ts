@@ -46,7 +46,7 @@ describe('SeasonsController (E2E)', () => {
       expect(data.email).toBeDefined();
       expect(data.email).toBe(adminCredentials().email);
       token = userToken;
-    });
+    }, 10000);
   });
 
   describe('Seasons/Editions CRUD operation', () => {

@@ -8,7 +8,7 @@ import { verifyToken } from '../utils/helpers';
 import { AuthToken } from '../@interfaces/auth-token';
 
 export const AuthUser = createParamDecorator<AuthToken>(
-  (data: unknown, ctx: ExecutionContext) => {
+  (data: any, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const token: string | undefined = request.headers['authorization'];
     if (!token) {
@@ -21,7 +21,8 @@ export const AuthUser = createParamDecorator<AuthToken>(
       }
       return user;
     } catch (error) {
-      throw new BadRequestException(error.message || 'Invalid auth token.');
+      const message = error.message || 'Invalid auth token';
+      throw new BadRequestException(message + ', login again to continue.');
     }
   },
 );
