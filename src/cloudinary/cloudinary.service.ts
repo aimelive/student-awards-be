@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class CloudinaryService {
-  private readonly FOLDER = 'MCSA-Student-Awards-Testing2';
+  private readonly FOLDER = process.env.CLOUDINARY_FOLDER;
 
   async uploadImage(image: string) {
     try {
